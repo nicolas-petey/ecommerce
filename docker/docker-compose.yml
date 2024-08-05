@@ -1,16 +1,38 @@
 version: "3.8"
 
 services:
-  postgres:
+  postgresuser:
     image: postgres:latest
-    container_name: postgres_db
+    container_name: postgres_user
     environment:
-      POSTGRES_USER: aston
+      POSTGRES_USER: user
       POSTGRES_PASSWORD: ecommerce
     ports:
-      - "5433:5432"
+      - "5435:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data_user:/var/lib/postgresql/data
+
+  postgresproduct:
+    image: postgres:latest
+    container_name: postgres_product
+    environment:
+      POSTGRES_USER: product
+      POSTGRES_PASSWORD: ecommerce
+    ports:
+      - "5440:5432"
+    volumes:
+      - postgres_data_product:/var/lib/postgresql/data
+
+  postgresorder:
+    image: postgres:latest
+    container_name: postgres_order
+    environment:
+      POSTGRES_USER: order
+      POSTGRES_PASSWORD: ecommerce
+    ports:
+      - "5445:5432"
+    volumes:
+      - postgres_data_order:/var/lib/postgresql/data
 
   pgadmin:
     image: dpage/pgadmin4:latest
@@ -21,7 +43,9 @@ services:
     ports:
       - "8081:80"
     depends_on:
-      - postgres
+      - postgresuser
+      - postgresproduct
+      - postgresorder
     volumes:
       - pgadmin_data:/var/lib/pgadmin
 
@@ -50,5 +74,7 @@ services:
       - zookeeper
 
 volumes:
-  postgres_data:
+  postgres_data_user:
+  postgres_data_order:
+  postgres_data_product:
   pgadmin_data:
