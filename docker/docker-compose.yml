@@ -1,15 +1,14 @@
-version: '3.8'
+version: "3.8"
 
 services:
   postgres:
     image: postgres:latest
-    container_name: ecommerce_aston_postgres
+    container_name: postgres_db
     environment:
       POSTGRES_USER: aston
       POSTGRES_PASSWORD: ecommerce
-      POSTGRES_DB: ecommerce
     ports:
-      - "5445:5432" 
+      - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
@@ -17,12 +16,14 @@ services:
     image: dpage/pgadmin4:latest
     container_name: pgadmin
     environment:
-      PGADMIN_DEFAULT_EMAIL: nicolas.petey@social.aston-ecole.com
-      PGADMIN_DEFAULT_PASSWORD: ecommerce
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin
     ports:
       - "8081:80"
     depends_on:
       - postgres
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
 
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
@@ -44,9 +45,10 @@ services:
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     ports:
-      - "9093:9092" 
+      - "9093:29092"
     depends_on:
       - zookeeper
 
 volumes:
   postgres_data:
+  pgadmin_data:
