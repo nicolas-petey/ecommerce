@@ -1,6 +1,4 @@
-index.ts
-
-import { register } from "./src/controller/authController";
+import router from "./routes";
 
 const express = require("express");
 const dotenv = require("dotenv");
@@ -10,8 +8,7 @@ dotenv.config();
 const app = express();
 
 app.use(express.json()); 
-app.post('/api/register', register);
-
+app.use('/api', router);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
