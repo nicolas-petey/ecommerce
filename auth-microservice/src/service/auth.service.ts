@@ -11,7 +11,7 @@ export class AuthService {
     const { idUser, username, email, password, name, lastName } = registerDto;
 
     const existingUser = await prisma.user.findUnique({
-      where: { idUser },
+      where: { email },
     });
 
     if (existingUser) {
@@ -35,10 +35,10 @@ export class AuthService {
   }
 
   async login(loginDto: LoginDto) {
-    const { idUser, email, password } = loginDto;
+    const { email, password } = loginDto;
 
     const user = await prisma.user.findUnique({
-      where: { idUser, email },
+      where: { email },
     });
 
     if (!user) {
@@ -51,7 +51,7 @@ export class AuthService {
       throw new Error("Email ou mot de passe incorrect.");
     }
 
-    const token = jwt.sign({ userId: user.idUser }, process.env.JWT_SECRET || '', {
+    const token = jwt.sign({ userId: user.idUser, email: user.email }, process.env.JWT_SECRET || '', {
       expiresIn: "1h",
     });
 

@@ -4,8 +4,8 @@ import { login, register } from './src/controller/auth.controller';
 
 const router = Router();
 
-router.post('/api/register', register);
-router.post('/api/login', login);
+router.post('/register', register);
+router.post('/login', login);
 router.get('/users', getAllUsers);
 router.get('/users/:idUser', getUserById);
 
