@@ -13,15 +13,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Product{
-  idProduct String @id @db.Uuid
-  name String
-  price Float
-  category String
-
-  ProductOnOrder ProductOnOrder[]
-}
-
 model Order{
   idOrder String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   idUser String
@@ -35,7 +26,6 @@ model Order{
 model ProductOnOrder{
   order       Order     @relation(fields: [idOrder], references: [idOrder])
   idOrder     String @db.Uuid // relation scalar field (used in the `@relation` attribute above)
-  product   Product @relation(fields: [idProduct], references: [idProduct])
   idProduct String @db.Uuid// relation scalar field (used in the `@relation` attribute above)
   quantity Int
 

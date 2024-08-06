@@ -1,7 +1,7 @@
 import type { Product } from "../product";
 
 export interface OrderDto {
-  ProductOnOrder: any;
+  ProductOnOrder?: any;
   idOrder?: String;
   idUser: String;
   dateOrder: Date;

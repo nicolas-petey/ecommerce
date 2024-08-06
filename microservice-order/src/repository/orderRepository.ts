@@ -2,6 +2,7 @@ import type { PrismaPromise } from "@prisma/client";
 import type { OrderDto } from "../model/DTO/orderDto";
 import type { Order } from "../model/order";
 import type { Product } from "../model/product";
+import type { Status } from "../model/status";
 import { prisma } from "../utils/client";
 
 export function getAllOrders(): PrismaPromise<Order[]> {
@@ -15,17 +16,13 @@ export async function getOrderById(id: string): Promise<OrderDto> {
       idOrder: id,
     },
     include: {
-      ProductOnOrder: {
-        include: {
-          product: true,
-        },
-      },
+      ProductOnOrder: true,
     },
   });
   return orders;
 }
 
-export async function createOrder(order: Order) /* : Promise<OrderDto> */ {
+export async function createOrder(order: Order): Promise<OrderDto> {
   const newOrder = await prisma.order.create({
     data: {
       idUser: order.idUser,
@@ -35,14 +32,6 @@ export async function createOrder(order: Order) /* : Promise<OrderDto> */ {
   });
 
   const products = (order.products ?? []).map(async (product: Product) => {
-    const createdProduct = await prisma.product.create({
-      data: {
-        idProduct: product.idProduct,
-        name: product.name,
-        price: product.price,
-        category: product.category,
-      },
-    });
     const productOnOrder = await prisma.productOnOrder.create({
       data: {
         quantity: product.quantity,
@@ -55,4 +44,28 @@ export async function createOrder(order: Order) /* : Promise<OrderDto> */ {
   const orderFinished = getOrderById(newOrder.idOrder);
 
   return orderFinished;
+}
+
+export async function modifyStatusOrder(
+  id: string,
+  status: Status
+): Promise<OrderDto | Error> {
+  try {
+    const newOrder: any = await prisma.order.update({
+      where: {
+        idOrder: id,
+      },
+      data: {
+        statusOrder: status.status,
+      },
+      include: {
+        ProductOnOrder: true,
+      },
+    });
+
+    return newOrder;
+  } catch (err) {
+    console.error(err);
+    return new Error("Error updating status");
+  }
 }
