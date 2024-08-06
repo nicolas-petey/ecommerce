@@ -21,5 +21,18 @@ model User {
   password String
   name     String?
   lastName  String?
+  phone    String?
   createdAt   DateTime            @default(now())
+  address  Address?
 }
+
+model Address {
+  idAddress String   @id   @default(dbgenerated("gen_random_uuid()"))  @db.Uuid
+  user    User @relation(fields: [idUser], references: [idUser])
+  idUser  String @db.Uuid @unique
+  street    String
+  city      String
+  zipCode   String
+  country   String
+}
+
