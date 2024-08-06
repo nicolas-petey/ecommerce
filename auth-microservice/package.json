@@ -6,13 +6,17 @@
     "start": "bun run index.ts"
   },
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bcrypt": "^5.0.2",
+    "@types/bun": "latest",
+    "@types/jsonwebtoken": "^9.0.6"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
   },
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2",
     "prisma": "^5.17.0"
   }
 }
