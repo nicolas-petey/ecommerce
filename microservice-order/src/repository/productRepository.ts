@@ -1,6 +1,8 @@
 export async function getProductById(id: string) {
+  const productUrl = process.env.PRODUCT_SERVICE_URL;
+
   try {
-    const product = await fetch(`http://127.0.0.1:5000/api/products/${id}`, {
+    const product = await fetch(`${productUrl}/${id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
