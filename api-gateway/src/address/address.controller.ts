@@ -1,29 +1,28 @@
-import { Controller } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import { AddressService } from './address.service';
+import { CreateAddressDto } from 'src/model/addressDto';
 
-@Controller('address')
+@Controller('addresses')
 export class AddressController {
-  // @Get()
-  // getAllAddresses() {
-  //   // Logic to get all addresses
-  // }
 
-  // @Get(':id')
-  // getAddressById(@Param('id') id: string) {
-  //   // Logic to get address by ID
-  // }
+  constructor(private service: AddressService) { }
 
-  // @Post()
-  // createAddress(@Body() address: AddressDto) {
-  //   // Logic to create a new address
-  // }
+  @Post()
+  createAddress(@Body() newAddress: CreateAddressDto) {
+    const userResponse = this.service.createAddress(newAddress);
+    return userResponse;
+  }
 
-  // @Put(':id')
-  // updateAddress(@Param('id') id: string, @Body() address: AddressDto) {
-  //   // Logic to update an existing address
-  // }
+  @Get()
+  async getAllAddresses(@Query() query: any) {
+    const userResponse = await this.service.getAllAddresses(query);
+    return userResponse;
+  }
 
-  // @Delete(':id')
-  // deleteAddress(@Param('id') id: string) {
-  //   // Logic to delete an address
-  // }
+  @Get(':id')
+  async getAddressById(@Param('id') id: string, @Query() query: any) {
+    const userResponse = await this.service.getAddressById(query, id);
+    return userResponse;
+  }
+
 }
