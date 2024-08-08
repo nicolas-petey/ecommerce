@@ -31,6 +31,7 @@ export async function createOrder(order: Order): Promise<OrderDto> {
     },
   });
 
+
   const products = (order.products ?? []).map(async (product: Product) => {
     const productOnOrder = await prisma.productOnOrder.create({
       data: {
@@ -41,7 +42,7 @@ export async function createOrder(order: Order): Promise<OrderDto> {
     });
   });
 
-  const orderFinished = getOrderById(newOrder.idOrder);
+  const orderFinished = await getOrderById(newOrder.idOrder);
 
   return orderFinished;
 }

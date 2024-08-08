@@ -13,6 +13,10 @@ def get_products():
     products = Product.query.all()
     return jsonify([{"idProduct": p.idProduct, "name": p.name, "category": p.category, "price": p.price} for p in products]), 200
 
+def get_products_by_id(idProduct):
+    products = Product.query.get(idProduct)
+    return jsonify({"idProduct": products.idProduct, "name": products.name, "category": products.category, "price": products.price}), 200
+
 def update_product(idProduct):
     data = request.get_json()
     product = Product.query.get(idProduct)

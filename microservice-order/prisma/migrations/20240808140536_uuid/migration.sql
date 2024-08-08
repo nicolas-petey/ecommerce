@@ -1,14 +1,4 @@
 -- CreateTable
-CREATE TABLE "Product" (
-    "idProduct" UUID NOT NULL,
-    "name" TEXT NOT NULL,
-    "price" DOUBLE PRECISION NOT NULL,
-    "category" TEXT NOT NULL,
-
-    CONSTRAINT "Product_pkey" PRIMARY KEY ("idProduct")
-);
-
--- CreateTable
 CREATE TABLE "Order" (
     "idOrder" UUID NOT NULL DEFAULT gen_random_uuid(),
     "idUser" TEXT NOT NULL,
@@ -30,6 +20,3 @@ CREATE TABLE "ProductOnOrder" (
 
 -- AddForeignKey
 ALTER TABLE "ProductOnOrder" ADD CONSTRAINT "ProductOnOrder_idOrder_fkey" FOREIGN KEY ("idOrder") REFERENCES "Order"("idOrder") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "ProductOnOrder" ADD CONSTRAINT "ProductOnOrder_idProduct_fkey" FOREIGN KEY ("idProduct") REFERENCES "Product"("idProduct") ON DELETE RESTRICT ON UPDATE CASCADE;
