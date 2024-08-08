@@ -17,7 +17,6 @@ export class UserController {
   async loginUser(@Body() loginDto: LoginDto) {
     const token = await this.service.login(loginDto);
     return { access_token: token };
-    
   }
 
   @Get()
