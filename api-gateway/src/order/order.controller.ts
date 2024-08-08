@@ -1,17 +1,29 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
+import { OrderDto } from 'src/model/DTO/orderDto';
+import { Order } from 'src/model/order';
+import { Status } from 'src/model/status';
 import { OrderService } from './order.service';
 
 @Controller('orders')
 export class OrderController {
   constructor(private readonly orderService: OrderService) {}
 
-  // @Get()
-  // async getAllOrders(): Promise<Order[]> {
-  //   return this.orderService.getAllOrders();
-  // }
+  //routerOrder.post("", orderController.createOrder);
+// routerOrder.get("/:id", orderController.getOrderById);
+// routerOrder.put("/:id", orderController.modifyStatusOrder);
 
-  // @Post()
-  // async createOrder(@Body() createOrderDto: CreateOrderDto): Promise<Order> {
-  //   return this.orderService.createOrder(createOrderDto);
-  // }
+  @Get(':id')
+  async getAllOrders(@Param('id') id: string): Promise<OrderDto> {
+    return this.orderService.getOrderById(id);
+  }
+
+  @Post()
+  async createOrder(@Body() createOrderDto: Order): Promise<OrderDto> {
+    return this.orderService.createOrder(createOrderDto);
+  }
+
+  @Put(':id')
+  async modifyOrder(@Param('id') id: string, @Body() status: Status): Promise<OrderDto> {
+    return this.orderService.modifyOrder(id, status);
+  }
 }
