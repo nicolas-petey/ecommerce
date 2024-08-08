@@ -1,11 +1,18 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Query } from '@nestjs/common';
 import { LoginDto, RegisterDto } from 'src/model/authDto';
 import { UserService } from './user.service';
+import { UserDto } from 'src/model/userDto';
 
 @Controller('users')
 export class UserController {
 
-  constructor(private service: UserService) {}
+  constructor(private service: UserService) { }
+
+  @Post('register')
+  registerUser(@Body() user: RegisterDto) {
+    const userResponse = this.service.register(user);
+    return userResponse;
+  }
 
   @Post('login')
   async loginUser(@Body() loginDto: LoginDto) {
@@ -14,28 +21,14 @@ export class UserController {
   }
 
   @Get()
-  getAllUsers() {
-    // Logic to get all users
-  }
-
-  @Get(':id')
-  getUserById(@Param('id') id: string) {
-    // Logic to get a user by ID
-  }
-
-  @Post()
-  registerUser(@Body() user: RegisterDto) {
-    const userResponse = this.service.register(user);
+  async getAllUsers(@Query() query: any) {
+    const userResponse = await this.service.getAllUsers(query);
     return userResponse;
   }
 
-  // @Put(':id')
-  // updateUser(@Param('id') id: string, @Body() user: UpdateUserDto) {
-  //   // Logic to update a user
-  // }
-
-  @Delete(':id')
-  deleteUser(@Param('id') id: string) {
-    // Logic to delete a user
+  @Get(':id')
+  async getUserById(@Param('id') id: string, @Query() query: any) {
+    const userResponse = await this.service.getUserById(query, id);
+    return userResponse;
   }
 }
