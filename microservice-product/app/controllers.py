@@ -1,12 +1,17 @@
 from flask import request, jsonify
 from .models import Product
 from . import db
+from .kafka_producer import send_message
 
 def add_product():
     data = request.get_json()
     new_product = Product(name=data['name'], category=data['category'], price=data['price'])
     db.session.add(new_product)
     db.session.commit()
+    
+    # Envoyer un message à Kafka
+    send_message('product-topic', {'action': 'add', 'product': data})
+    
     return jsonify({"message": "Product added successfully"}), 201
 
 def get_products():
@@ -23,6 +28,10 @@ def update_product(idProduct):
     product.category = data.get('category', product.category)
     product.price = data.get('price', product.price)
     db.session.commit()
+    
+    # Envoyer un message à Kafka
+    send_message('product-topic', {'action': 'update', 'product': data})
+    
     return jsonify({"message": "Product updated successfully"}), 200
 
 def delete_product(idProduct):
@@ -32,4 +41,8 @@ def delete_product(idProduct):
     
     db.session.delete(product)
     db.session.commit()
+    
+    # Envoyer un message à Kafka
+    send_message('product-topic', {'action': 'delete', 'product': {'idProduct': idProduct}})
+    
     return jsonify({"message": "Product deleted successfully"}), 200
