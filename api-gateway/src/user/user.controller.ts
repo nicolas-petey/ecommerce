@@ -1,6 +1,7 @@
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
 import { LoginDto, RegisterDto } from 'src/model/authDto';
 import { UserService } from './user.service';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 @Controller('users')
 export class UserController {
 
@@ -14,8 +15,9 @@ export class UserController {
 
   @Post('login')
   async loginUser(@Body() loginDto: LoginDto) {
-    const userResponse = await this.service.login(loginDto);
-    return userResponse;
+    const token = await this.service.login(loginDto);
+    return { access_token: token };
+    
   }
 
   @Get()
@@ -24,6 +26,7 @@ export class UserController {
     return userResponse;
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   async getUserById(@Param('id') id: string, @Query() query: any) {
     const userResponse = await this.service.getUserById(query, id);

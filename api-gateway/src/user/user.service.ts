@@ -39,7 +39,7 @@ export class UserService {
     });
     if (response.ok) {
       const data = await response.json();
-      return data;
+      return data.access_token;
     } else {
       const error = await response.text();
       return new Error(error);
