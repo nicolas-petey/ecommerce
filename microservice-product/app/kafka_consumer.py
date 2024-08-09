@@ -5,14 +5,25 @@ import json
 def create_consumer():
     """ Crée et configure un consommateur Kafka. """
     conf = {
-        'bootstrap.servers': 'kafka:29092',  # Utiliser le nom du conteneur Docker
+        'bootstrap.servers': 'localhost:9093',  # Connexion via le port 9093
         'group.id': 'product-consumer-group',
         'auto.offset.reset': 'earliest',
         'enable.auto.commit': True
     }
     consumer = Consumer(conf)
     consumer.subscribe(['product-topic'])
+    
+    # Test de connexion à Kafka
+    try:
+        consumer.poll(1.0)  # Essaye de récupérer un message
+        print("Connected to Kafka successfully")
+    except Exception as e:
+        print(f"Failed to connect to Kafka: {e}")
+        consumer.close()
+        return None
+
     return consumer
+
 
 def create_connection():
     """ Crée une connexion à la base de données PostgreSQL. """
@@ -21,8 +32,9 @@ def create_connection():
             'dbname': 'product',
             'user': 'product',
             'password': 'ecommerce',
-            'host': 'postgresproduct',  # Utiliser le nom du conteneur Docker
-            'port': '5432'
+            'host': 'localhost',  # Utilisez localhost puisque vous vous connectez depuis votre machine
+            'port': '5440',  # Port mappé pour postgresproduct
+            'client_encoding': 'UTF8'  # Forcer l'encodage UTF-8
         }
         print(f"Attempting to connect to database with parameters: {connection_params}")
         connection = psycopg2.connect(**connection_params)
